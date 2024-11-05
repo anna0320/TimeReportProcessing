@@ -25,7 +25,7 @@ namespace TimeReportProcessing.Controllers
                     t.ExecutionDate,
                     t.Description,
                     TimeSpent = t.TimeSpent.ToString(@"hh\:mm"),
-                    UserFullName = "Иванов И.И."
+                    UserFullName = t.User.FullName.ToString()
                 })
                 .ToListAsync();
 
