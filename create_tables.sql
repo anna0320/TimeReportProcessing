@@ -18,23 +18,22 @@ CREATE TABLE [Users] (
 );
 GO
 
-CREATE TABLE [TaskItems] (
+CREATE TABLE [Tasks] (
     [Id] int NOT NULL IDENTITY,
     [Description] nvarchar(max) NOT NULL,
-    [ExecutionDate] datetime NOT NULL,
+    [ExecutionDate] datetime2 NOT NULL DEFAULT (GETDATE()),
     [TimeSpent] time NOT NULL,
-    [Executor] nvarchar(max) NOT NULL,
     [UserId] int NOT NULL,
-    CONSTRAINT [PK_TaskItems] PRIMARY KEY ([Id]),
-    CONSTRAINT [FK_TaskItems_Users_UserId] FOREIGN KEY ([UserId]) REFERENCES [Users] ([Id]) ON DELETE CASCADE
+    CONSTRAINT [PK_Tasks] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_Tasks_Users_UserId] FOREIGN KEY ([UserId]) REFERENCES [Users] ([Id]) ON DELETE CASCADE
 );
 GO
 
-CREATE INDEX [IX_TaskItems_UserId] ON [TaskItems] ([UserId]);
+CREATE INDEX [IX_Tasks_UserId] ON [Tasks] ([UserId]);
 GO
 
 INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-VALUES (N'20241104151838_TaskItemsAndUsersModels', N'8.0.10');
+VALUES (N'20241105171403_new-migration', N'8.0.10');
 GO
 
 COMMIT;
