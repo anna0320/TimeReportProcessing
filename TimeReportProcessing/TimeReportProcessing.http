@@ -1,0 +1,10 @@
+@TimeReportProcessing_HostAddress = http://localhost:5000
+
+# Получение всех задач
+POST http://localhost:5000/api/tasks
+Accept: application/json
+
+###
+
+GET http://localhost:5000/api/users
+Accept: application/json

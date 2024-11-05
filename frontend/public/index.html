@@ -1,0 +1,34 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task List</title>
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <h1>Список задач</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Описание</th>
+                <th>Дата выполнения</th>
+                <th>Время затрачено</th>
+                <th>Пользователь</th>
+            </tr>
+        </thead>
+        <tbody id="taskTable"></tbody>
+    </table>
+
+    <h2>Добавить новую задачу</h2>
+    <form id="taskForm">
+        <label for="description">Описание:</label>
+        <input type="text" id="description" required><br>
+
+        <label for="timeSpent">Время затрачено (часы:минуты):</label>
+        <input type="text" id="timeSpent" placeholder="HH:MM" required><br>
+
+        <button type="submit">Добавить задачу</button>
+    </form>
+</body>
+</html>

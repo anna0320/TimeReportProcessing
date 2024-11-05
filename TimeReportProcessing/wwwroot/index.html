@@ -1,0 +1,45 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Отчет о временных затратах</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Список задач</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Дата выполнения</th>
+                <th>Описание задачи</th>
+                <th>Время, затраченное на задачу (чч:мм)</th>
+                <th>Исполнитель</th>
+            </tr>
+        </thead>
+        <tbody id="tasksBody">
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="2">Общее время</td>
+                <td id="totalTime">00:00</td>
+                <td></td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <h2>Добавить новую задачу</h2>
+    <form id="taskForm">
+        <label for="description">Описание задачи:</label>
+        <input type="text" id="description" required>
+
+        <label for="timeSpent">Время затраченное (чч:мм):</label>
+        <input type="text" id="timeSpent" pattern="\d{1,2}:\d{2}" placeholder="чч:мм" required>
+
+        <button type="submit">Добавить задачу</button>
+    </form>
+
+    <script src="scripts.js"></script>
+</body>
+</html>
