@@ -1,4 +1,4 @@
-﻿const apiUrl = '/api/tasks';
+﻿const apiUrl = 'http://localhost:5000/api/tasks';
 
 async function fetchTasks() {
     try {
@@ -14,7 +14,7 @@ async function fetchTasks() {
 
 async function addTask(task) {
     try {
-        const response = await fetch(apiUrl, {
+        const response = await fetch("http://localhost:5000/api/tasks", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

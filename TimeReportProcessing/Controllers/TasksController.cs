@@ -19,11 +19,12 @@ namespace TimeReportProcessing.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TaskItems>>> GetTasks()
         {
-            return await _context.TaskItems.Include(t => t.User).ToListAsync();
+            var tasks = await _context.TaskItems.Include(t => t.User).ToListAsync();
+            return Ok(tasks);
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostTask(TaskItems task)
+        public async Task<IActionResult> PostTask([FromBody] TaskItems task)
         {
             if (task.ExecutionDate.Date != DateTime.Now.Date)
             {
@@ -45,7 +46,7 @@ namespace TimeReportProcessing.Controllers
             _context.TaskItems.Add(task);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetTasks), new { id = task.Id }, task);
+            return Ok(CreatedAtAction(nameof(GetTasks), new { id = task.Id }, task));
         }
     }
 }
