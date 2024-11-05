@@ -43,7 +43,7 @@ namespace TimeReportProcessing.Controllers
                 Description = request.Description,
                 ExecutionDate = DateTime.Today,
                 TimeSpent = request.TimeSpent,
-                UserId = 1  // Пример: текущий пользователь с ID 1
+                UserId = 1  //пользователь с ID 1, тут можно присваивать другое ID при необходимости
             };
 
             _context.TaskItems.Add(task);

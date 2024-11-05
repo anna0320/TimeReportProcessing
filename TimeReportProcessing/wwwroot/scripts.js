@@ -7,7 +7,7 @@
         const description = document.getElementById("description").value;
         let timeSpent = document.getElementById("timeSpent").value;
         if (/^\d{2}:\d{2}$/.test(timeSpent)) {
-            timeSpent += ":00";  // добавляем секунды, если их нет
+            timeSpent += ":00";
         }
 
         if (!description || !timeSpent) {
@@ -31,7 +31,6 @@
                 return;
             }
 
-            // Обновляем список задач после успешного добавления
             loadTasks();
         } catch (error) {
             alert("Не удалось добавить задачу: " + error.message);
@@ -49,20 +48,27 @@ async function loadTasks() {
     let totalMinutes = 0;
 
     tasks.forEach(task => {
+        const executionDate = task.executionDate;
+        const description = task.description;
+        const timeSpent = task.timeSpent;
+        const userFullName = task.userFullName;
+
         const row = document.createElement("tr");
         row.innerHTML = `
-            <td>${task.ExecutionDate}</td>
-            <td>${task.Description}</td>
-            <td>${task.TimeSpent}</td>
-            <td>${task.UserId}</td>
+            <td>${executionDate.split("T")[0]}</td>
+            <td>${description}</td>
+            <td>${timeSpent}</td>
+            <td>${userFullName}</td>
         `;
         tableBody.appendChild(row);
 
-        const [hours, minutes] = task.TimeSpent.split(":").map(Number);
-        totalMinutes += hours * 60 + minutes;
+        if (timeSpent) {
+            const [hours, minutes] = timeSpent.split(":").map(Number);
+            totalMinutes += (hours || 0) * 60 + (minutes || 0);
+        }
     });
 
     const totalHours = Math.floor(totalMinutes / 60);
     const totalRemainingMinutes = totalMinutes % 60;
-    document.getElementById("totalTime").textContent = `${totalHours}:${totalRemainingMinutes.toString().padStart(2, "0")}`;
+    document.querySelector("#totalTime").textContent = `${totalHours}ч ${totalRemainingMinutes}мин`;
 }
