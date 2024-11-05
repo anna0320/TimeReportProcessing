@@ -10,15 +10,17 @@ namespace TimeReportProcessing.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<TaskItems>().Property(x => x.ExecutionDate)
-                .HasColumnType("datetime");
-            modelBuilder.Entity<TaskItems>().Property(x => x.TimeSpent)
-                .HasColumnType("nvarchar(5)");
+            modelBuilder.Entity<Users>().ToTable("Users");
+            modelBuilder.Entity<TaskItems>().ToTable("Tasks");
+
             modelBuilder.Entity<TaskItems>()
-                .HasOne(x => x.User)
-                .WithMany(x => x.TaskItems)
-                .HasForeignKey(x => x.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .Property(t => t.ExecutionDate)
+                .HasDefaultValueSql("GETDATE()");
+
+            modelBuilder.Entity<TaskItems>()
+                .HasOne(t => t.User)
+                .WithMany()
+                .HasForeignKey(t => t.UserId);
         }
     }
 }

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace TimeReportProcessing.Migrations
 {
     /// <inheritdoc />
-    public partial class newMigration : Migration
+    public partial class newmigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -25,35 +25,30 @@ namespace TimeReportProcessing.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "TaskItems",
+                name: "Tasks",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ExecutionDate = table.Column<DateTime>(type: "datetime", nullable: false),
-                    TimeSpent = table.Column<string>(type: "nvarchar(5)", nullable: false),
+                    ExecutionDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
+                    TimeSpent = table.Column<TimeSpan>(type: "time", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TaskItems", x => x.Id);
+                    table.PrimaryKey("PK_Tasks", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_TaskItems_Users_UserId",
+                        name: "FK_Tasks_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.InsertData(
-                table: "Users",
-                columns: new[] { "Id", "FullName" },
-                values: new object[] { 1, "Иванов И.И." });
-
             migrationBuilder.CreateIndex(
-                name: "IX_TaskItems_UserId",
-                table: "TaskItems",
+                name: "IX_Tasks_UserId",
+                table: "Tasks",
                 column: "UserId");
         }
 
@@ -61,7 +56,7 @@ namespace TimeReportProcessing.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "TaskItems");
+                name: "Tasks");
 
             migrationBuilder.DropTable(
                 name: "Users");

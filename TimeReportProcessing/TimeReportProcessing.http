@@ -6,5 +6,5 @@ Accept: application/json
 
 ###
 
-GET http://localhost:5000/api/users
+GET http://localhost:5000/api/tasks
 Accept: application/json

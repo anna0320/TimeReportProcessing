@@ -12,6 +12,6 @@ namespace TimeReportProcessing.Models
         public TimeSpan TimeSpent { get; set; }
 
         public int UserId { get; set; }
-        public Users User { get; set; }
+        public Users? User { get; set; }
     }
 }

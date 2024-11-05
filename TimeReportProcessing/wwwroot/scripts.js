@@ -1,83 +1,68 @@
-﻿const apiUrl = 'http://localhost:5000/api/tasks';
+﻿document.addEventListener("DOMContentLoaded", () => {
+    loadTasks();
 
-async function fetchTasks() {
-    try {
-        const response = await fetch(apiUrl);
-        if (!response.ok) throw new Error('Ошибка при получении задач');
+    document.getElementById("taskForm").addEventListener("submit", async (event) => {
+        event.preventDefault();
 
-        const tasks = await response.json();
-        renderTasks(tasks);
-    } catch (error) {
-        console.error(error);
-    }
-}
+        const description = document.getElementById("description").value;
+        let timeSpent = document.getElementById("timeSpent").value;
+        if (/^\d{2}:\d{2}$/.test(timeSpent)) {
+            timeSpent += ":00";  // добавляем секунды, если их нет
+        }
 
-async function addTask(task) {
-    try {
-        const response = await fetch("http://localhost:5000/api/tasks", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(task),
-        });
+        if (!description || !timeSpent) {
+            alert("Все поля обязательны для заполнения.");
+            return;
+        }
 
-        if (!response.ok) throw new Error('Ошибка при добавлении задачи');
+        try {
+            const response = await fetch("http://localhost:5000/api/tasks", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    description: description,
+                    timeSpent: timeSpent
+                })
+            });
 
-        const newTask = await response.json();
-        return newTask;
-    } catch (error) {
-        console.error(error);
-    }
-}
+            if (!response.ok) {
+                const error = await response.text();
+                alert("Ошибка: " + error);
+                return;
+            }
 
-function formatTime(totalMinutes) {
-    const hours = Math.floor(totalMinutes / 60);
-    const minutes = totalMinutes % 60;
-    return `${ String(hours).padStart(2, '0') }:${ String(minutes).padStart(2, '0') }`;
-}
+            // Обновляем список задач после успешного добавления
+            loadTasks();
+        } catch (error) {
+            alert("Не удалось добавить задачу: " + error.message);
+        }
+    });
+});
 
-function renderTasks(tasks) {
-    const tasksBody = document.getElementById('tasksBody');
-    tasksBody.innerHTML = '';
+async function loadTasks() {
+    const response = await fetch("http://localhost:5000/api/tasks");
+    const tasks = await response.json();
+
+    const tableBody = document.querySelector("#tasksTable tbody");
+    tableBody.innerHTML = "";
 
     let totalMinutes = 0;
 
     tasks.forEach(task => {
-        const row = document.createElement('tr');
+        const row = document.createElement("tr");
         row.innerHTML = `
-            <td>${task.executionDate}</td>
-            <td>${task.description}</td>
-            <td>${task.timeSpent}</td>
-            <td>Иванов И.И.</td>
+            <td>${task.ExecutionDate}</td>
+            <td>${task.Description}</td>
+            <td>${task.TimeSpent}</td>
+            <td>${task.UserId}</td>
         `;
-        tasksBody.appendChild(row);
+        tableBody.appendChild(row);
 
-        const [hours, minutes] = task.timeSpent.split(':').map(Number);
+        const [hours, minutes] = task.TimeSpent.split(":").map(Number);
         totalMinutes += hours * 60 + minutes;
     });
 
-    document.getElementById('totalTime').innerText = formatTime(totalMinutes);
+    const totalHours = Math.floor(totalMinutes / 60);
+    const totalRemainingMinutes = totalMinutes % 60;
+    document.getElementById("totalTime").textContent = `${totalHours}:${totalRemainingMinutes.toString().padStart(2, "0")}`;
 }
-
-document.getElementById('taskForm').addEventListener('submit', async function (event) {
-    event.preventDefault();
-
-    const description = document.getElementById('description').value;
-    const timeSpent = document.getElementById('timeSpent').value;
-
-    const newTask = {
-        description: description,
-        executionDate: new Date().toLocaleDateString('ru-RU'),
-        timeSpent: timeSpent,
-        userId: 1 
-    };
-
-    const addedTask = await addTask(newTask);
-    if (addedTask) {
-        fetchTasks();
-        this.reset();
-    }
-});
-
-fetchTasks();

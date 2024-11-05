@@ -35,11 +35,12 @@ namespace TimeReportProcessing.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("ExecutionDate")
-                        .HasColumnType("datetime");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
-                    b.Property<string>("TimeSpent")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(5)");
+                    b.Property<TimeSpan>("TimeSpent")
+                        .HasColumnType("time");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
@@ -48,7 +49,7 @@ namespace TimeReportProcessing.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("TaskItems");
+                    b.ToTable("Tasks", (string)null);
                 });
 
             modelBuilder.Entity("TimeReportProcessing.Models.Users", b =>
@@ -65,30 +66,18 @@ namespace TimeReportProcessing.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            FullName = "Иванов И.И."
-                        });
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("TimeReportProcessing.Models.TaskItems", b =>
                 {
                     b.HasOne("TimeReportProcessing.Models.Users", "User")
-                        .WithMany("TaskItems")
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("TimeReportProcessing.Models.Users", b =>
-                {
-                    b.Navigation("TaskItems");
                 });
 #pragma warning restore 612, 618
         }

@@ -2,40 +2,37 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Отчет о временных затратах</title>
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Добавьте базовый CSS для таблицы и формы */
+    </style>
 </head>
 <body>
-    <h1>Список задач</h1>
+    <h1>Отчет о временных затратах сотрудников</h1>
 
-    <table>
+    <table id="tasksTable">
         <thead>
             <tr>
                 <th>Дата выполнения</th>
                 <th>Описание задачи</th>
-                <th>Время, затраченное на задачу (чч:мм)</th>
+                <th>Время</th>
                 <th>Исполнитель</th>
             </tr>
         </thead>
-        <tbody id="tasksBody">
-        </tbody>
+        <tbody></tbody>
         <tfoot>
             <tr>
-                <td colspan="2">Общее время</td>
-                <td id="totalTime">00:00</td>
-                <td></td>
+                <td colspan="4">Общее время: <span id="totalTime">00:00</span></td>
             </tr>
         </tfoot>
     </table>
 
-    <h2>Добавить новую задачу</h2>
     <form id="taskForm">
         <label for="description">Описание задачи:</label>
         <input type="text" id="description" required>
 
-        <label for="timeSpent">Время затраченное (чч:мм):</label>
-        <input type="text" id="timeSpent" pattern="\d{1,2}:\d{2}" placeholder="чч:мм" required>
+        <label for="timeSpent">Время (чч:мм):</label>
+        <input type="time" id="timeSpent" required>
 
         <button type="submit">Добавить задачу</button>
     </form>

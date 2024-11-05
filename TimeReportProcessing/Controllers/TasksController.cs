@@ -17,36 +17,45 @@ namespace TimeReportProcessing.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TaskItems>>> GetTasks()
+        public async Task<ActionResult> GetTasks()
         {
-            var tasks = await _context.TaskItems.Include(t => t.User).ToListAsync();
+            var tasks = await _context.TaskItems
+                .Select(t => new
+                {
+                    t.ExecutionDate,
+                    t.Description,
+                    TimeSpent = t.TimeSpent.ToString(@"hh\:mm"),
+                    UserFullName = "Иванов И.И."
+                })
+                .ToListAsync();
+
             return Ok(tasks);
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostTask([FromBody] TaskItems task)
+        public async Task<IActionResult> AddTask([FromBody] TaskRequest request)
         {
-            if (task.ExecutionDate.Date != DateTime.Now.Date)
-            {
-                return BadRequest("Дата выполнения должна быть текущей.");
-            }
+            if (string.IsNullOrWhiteSpace(request.Description) || request.TimeSpent <= TimeSpan.Zero)
+                return BadRequest("Все поля должны быть заполнены, а время должно быть больше нуля.");
 
-            if (string.IsNullOrEmpty(task.Description) || string.IsNullOrEmpty(task.TimeSpent.ToString()))
+            var task = new TaskItems
             {
-                return BadRequest("Все поля обязательны для заполнения.");
-            }
+                Description = request.Description,
+                ExecutionDate = DateTime.Today,
+                TimeSpent = request.TimeSpent,
+                UserId = 1  // Пример: текущий пользователь с ID 1
+            };
 
-            // Проверка формата времени
-            if (!TimeSpan.TryParse(task.TimeSpent.ToString(), out _))
-            {
-                return BadRequest("Неверный формат времени. Используйте HH:MM.");
-            }
-
-            task.UserId = 1; 
             _context.TaskItems.Add(task);
             await _context.SaveChangesAsync();
 
-            return Ok(CreatedAtAction(nameof(GetTasks), new { id = task.Id }, task));
+            return Ok(task);
         }
+    }
+
+    public class TaskRequest
+    {
+        public string Description { get; set; }
+        public TimeSpan TimeSpent { get; set; }
     }
 }
